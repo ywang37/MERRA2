@@ -67,7 +67,7 @@ our $DATA_DIR_4x5      = "";
 # moveMerra2 YYYYMMDD FILETYPE
 #
 # !REVISION HISTORY: 
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 #                  GEOS-Chem Global Chemical Transport Model                  !
@@ -94,7 +94,7 @@ sub getDefaults($$) {
 # &getDefaults( FILENAME, DATE );
 #
 # !REVISION HISTORY:
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -157,7 +157,7 @@ sub getDirectories($) {
 # &getDirectories( FILENAME )
 #
 # !REVISION HISTORY:
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -251,7 +251,7 @@ sub getSysVars() {
 # &getSysVars();
 #
 # !REVISION HISTORY:
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -291,7 +291,7 @@ sub replaceTokens($$) {
 #  $var = &replaceTokens( $var );
 #
 # !REVISION HISTORY:
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -331,7 +331,7 @@ sub checkDir($) {
 #  &checkDir( $dir );
 #
 # !REVISION HISTORY:
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -362,7 +362,8 @@ sub checkDir($) {
 sub moveFiles(@) {
 #
 # !REVISION HISTORY:
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
+#  13 Aug 2015 - R. Yantosca - Now use nccopy -d5 for compression
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -373,6 +374,7 @@ sub moveFiles(@) {
   my $dir      = ""; 
   my $mask     = "";
   my $result   = "";
+  my $target   = "";
   my $fileType = "";
 
   # Skip the first argument, which is the date
@@ -387,28 +389,24 @@ sub moveFiles(@) {
     if ( $DO_NEST_CH =~ "T" ) {
 
       # Temporary file mask
-      $mask   = "$TEMP_DIR_NEST_CH$DATA_FILE_NEST_CH";
-      $mask   = &replaceTokens( $mask, $fileType );
+      $mask = "$TEMP_DIR_NEST_CH$DATA_FILE_NEST_CH";
+      $mask = &replaceTokens( $mask, $fileType );
   
       # Data directory path
-      $dir    = "$DATA_DIR_NEST_CH";
-      $dir    = &replaceTokens( $dir, $fileType );
+      $dir = "$DATA_DIR_NEST_CH";
+      $dir = &replaceTokens( $dir, $fileType );
       &checkDir( $dir );
+      
+      # New file name
+      $target = "$dir$DATA_FILE_NEST_CH";
+      $target = &replaceTokens( $target, $fileType );
 
-      if ( $TEMP_DIR_NEST_CH eq $DATA_DIR_NEST_CH ) {
-
-	# We don't have to move files
-	print "No move necessary, nested CH data is in proper location\n";
-
-      } else {
-
-	# Move command (list the directory first to force an automount)
-	$cmd    = "ls $dir > /dev/null; mv -f $mask $dir";
+      # Move command (list the directory first to force an automount)
+      $cmd = "ls $dir > /dev/null; nccopy -d5 $mask $target; rm -f $mask";
     
-	# Move the files
-	print "$cmd\n";
-	$result = qx( $cmd );
-    }
+      # Move the files
+      print "$cmd\n";
+      $result = qx( $cmd );
     }
 
     #-------------------------------
@@ -417,16 +415,20 @@ sub moveFiles(@) {
     if ( $DO_NEST_EU =~ "T" ) {
 
       # Temporary file mask
-      $mask   = "$TEMP_DIR_NEST_EU$DATA_FILE_NEST_EU";
-      $mask   = &replaceTokens( $mask, $fileType );
+      $mask = "$TEMP_DIR_NEST_EU$DATA_FILE_NEST_EU";
+      $mask = &replaceTokens( $mask, $fileType );
   
       # Data directory path
-      $dir    = "$DATA_DIR_NEST_EU";
-      $dir    = &replaceTokens( $dir, $fileType );
+      $dir = "$DATA_DIR_NEST_EU;";
+      $dir = &replaceTokens( $dir, $fileType );
       &checkDir( $dir );
 
+      # New file name
+      $target = "$dir$DATA_FILE_NEST_EU";
+      $target = &replaceTokens( $target, $fileType );
+
       # Move command (list the directory first to force an automount)
-      $cmd    = "ls $dir > /dev/null; mv -f $mask $dir";
+      $cmd = "ls $dir > /dev/null; nccopy -d5 $mask $target; rm -f $mask";
     
       # Move the files
       print "$cmd\n";
@@ -439,16 +441,20 @@ sub moveFiles(@) {
     if ( $DO_NEST_NA =~ "T" ) {
 
       # Temporary file mask
-      $mask   = "$TEMP_DIR_NEST_NA$DATA_FILE_NEST_NA";
-      $mask   = &replaceTokens( $mask, $fileType );
+      $mask = "$TEMP_DIR_NEST_NA$DATA_FILE_NEST_NA";
+      $mask = &replaceTokens( $mask, $fileType );
   
       # Data directory path
-      $dir    = "$DATA_DIR_NEST_NA";
-      $dir    = &replaceTokens( $dir, $fileType );
+      $dir = "$DATA_DIR_NEST_NA";
+      $dir = &replaceTokens( $dir, $fileType );
       &checkDir( $dir );
 
+      # New file name
+      $target = "$dir$DATA_FILE_NEST_NA";
+      $target = &replaceTokens( $target, $fileType );
+
       # Move command (list the directory first to force an automount)
-      $cmd    = "ls $dir > /dev/null; mv -f $mask $dir";
+      $cmd  = "ls $dir > /dev/null; nccopy -d5 $mask $target; rm -f $mask";
     
       # Move the files
       print "$cmd\n";
@@ -456,21 +462,51 @@ sub moveFiles(@) {
     }				
 
     #-------------------------------
+    # Nested SE Asia grid
+    #-------------------------------
+    if ( $DO_NEST_SE =~ "T" ) {
+
+      # Temporary file mask
+      $mask = "$TEMP_DIR_NEST_NA$DATA_FILE_NEST_SE";
+      $mask = &replaceTokens( $mask, $fileType );
+  
+      # Data directory path
+      $dir = "$DATA_DIR_NEST_SE";
+      $dir = &replaceTokens( $dir, $fileType );
+      &checkDir( $dir );
+
+      # New file name
+      $target = "$dir$DATA_FILE_NEST_SE";
+      $target = &replaceTokens( $target, $fileType );
+
+      # Move command (list the directory first to force an automount)
+      $cmd  = "ls $dir > /dev/null; nccopy -d5 $mask $target; rm -f $mask";
+    
+      # Move the files
+      print "$cmd\n";
+      $result = qx( $cmd );
+    }	
+
+    #-------------------------------
     # 2 x 2.5 global grid
     #-------------------------------
     if ( $DO_2x25 =~ "T" ) {
 
       # File path to temporary directory
-      $mask   = "$TEMP_DIR_2x25$DATA_FILE_2x25";
-      $mask   = &replaceTokens( $mask, $fileType );
+      $mask = "$TEMP_DIR_2x25$DATA_FILE_2x25";
+      $mask = &replaceTokens( $mask, $fileType );
     
       # File path to data directory
-      $dir    = "$DATA_DIR_2x25";
-      $dir    = &replaceTokens( $dir, $fileType );
+      $dir = "$DATA_DIR_2x25";
+      $dir = &replaceTokens( $dir, $fileType );
       &checkDir( $dir );    
 
+      # New file name
+      $target = "$dir$DATA_FILE_2x25";
+      $target = &replaceTokens( $target, $fileType );
+
       # Move command (list the directory first to force an automount)
-      $cmd    = "ls $dir > /dev/null; mv -f $mask $dir";
+      $cmd = "ls $dir > /dev/null; nccopy -d5 $mask $target; rm -f $mask";
     
       # Move the files
       print "$cmd\n";
@@ -483,16 +519,20 @@ sub moveFiles(@) {
     if ( $DO_4x5 =~ "T" ) {
 
       # File path to temporary directory
-      $mask   = "$TEMP_DIR_4x5$DATA_FILE_4x5";
-      $mask   = &replaceTokens( $mask, $fileType );
+      $mask = "$TEMP_DIR_4x5$DATA_FILE_4x5";
+      $mask = &replaceTokens( $mask, $fileType );
     
       # File path to data directory
-      $dir    = "$DATA_DIR_4x5";
-      $dir    = &replaceTokens( $dir, $fileType );
+      $dir = "$DATA_DIR_4x5";
+      $dir = &replaceTokens( $dir, $fileType );
       &checkDir( $dir );    
 
+      # New file name
+      $target = "$dir$DATA_FILE_4x5";
+      $target = &replaceTokens( $target, $fileType );
+
       # Move command (list the directory first to force an automount)
-      $cmd    = "ls $dir > /dev/null; mv -f $mask $dir";
+      $cmd = "ls $dir > /dev/null; nccopy -d5 $mask $target; rm -f $mask";
 
       # Move the files
       print "$cmd\n";
@@ -522,7 +562,7 @@ sub main() {
 #  &main();
 #
 # !REVISION HISTORY:
-#  28 May 2015 - R. Yantosca - Initial version
+#  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #EOP
 #------------------------------------------------------------------------------
 

@@ -94,6 +94,8 @@ MODULE Merra2_I3Module
 !
 ! !REVISION HISTORY: 
 !  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
+!  13 Aug 2015 - R. Yantosca - If the output file name ends in *.nc4 
+!                              then save data to disk in netCDF-4 format
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -105,7 +107,8 @@ MODULE Merra2_I3Module
     CHARACTER(LEN=255) :: lName,   units,   gamap,   DI,    DJ
     CHARACTER(LEN=255) :: delta_t, begin_d, begin_t, incr,  msg, cal
     INTEGER            :: idLon,   idLat,   idLev,   idAp
-    INTEGER            :: idBp,    idTime,  vId,     omode
+    INTEGER            :: idBp,    idTime,  vId,     omode, C
+    LOGICAL            :: is_nc4
 
     ! Arrays
     INTEGER            :: var1(1), var3(3), var4(4)
@@ -123,8 +126,13 @@ MODULE Merra2_I3Module
     WRITE( 6, 100 ) TRIM( gridName )
 100 FORMAT ( '%%% Defining netCDF file vars & attrs for ', a' grid' )
 
+    ! If filename ends in ".nc"  then save as netCDF-3
+    ! If filename ends in ".nc4" then save as netCDF-4
+    C      = LEN_TRIM( outFileName )
+    is_nc4 = ( outFileName(C-3:C) == '.nc4' )
+
     ! Open netCDF file for writing
-    CALL NcCr_Wr( fOut, TRIM( outFileName ) )
+    CALL NcCr_Wr( fOut, TRIM( outFileName ), WRITE_NC4=is_nc4 )
 
     ! Turn filling off
     CALL NcSetFill( fOut, NF_NOFILL, omode )
@@ -157,7 +165,11 @@ MODULE Merra2_I3Module
     CALL NcDef_Glob_Attributes( fOut, 'ModificationDateTime', TRIM( lName ) )
 
     ! Format
-    lName = "NetCDF-3" ;
+    IF ( is_Nc4 ) THEN
+       lName = "NetCDF-4"
+    ELSE
+       lName = 'NetCDF-3'
+    ENDIF
     CALL NcDef_Glob_Attributes( fOut, 'Format' ,              TRIM( lName ) )
                                                               
     ! Format                                                  

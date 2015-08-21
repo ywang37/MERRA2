@@ -46,6 +46,7 @@
 SHELL   :=/bin/bash
 BIN     :=../bin
 DOC     :=../doc
+EXE     :=Merra2_Driver.x
 EXE0    :=Merra2_Driver0.x
 EXE1    :=Merra2_Driver1.x
 EXE2    :=Merra2_Driver2.x
@@ -79,6 +80,7 @@ TMP  := $(SRC:.F=.o)
 OBJ  := $(TMP:.F90=.o)
 
 # Object file for executable
+OBJx  := $(EXE:.x=.o)
 OBJx0 := $(EXE0:.x=.o)
 OBJx1 := $(EXE1:.x=.o)
 OBJx2 := $(EXE2:.x=.o)
@@ -266,10 +268,12 @@ lib: $(OBJ)
 	$(AR) crs libMerra2.a $(OBJ)
 	mv libMerra2.a $(LIB)
 
-exe: $(OBJx) $(OBJx0) $(OBJx1) $(OBJx2)
+exe: $(OBJx) $(OBJx) $(OBJx0) $(OBJx1) $(OBJx2)
+	$(LD) $(OBJx) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE)
 	$(LD) $(OBJx0) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE0)
 	$(LD) $(OBJx1) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE1)
 	$(LD) $(OBJx2) -L$(LIB) -lMerra2 $(LINK_NC) -o $(EXE2)
+	cp -f $(EXE) $(BIN)
 	cp -f $(EXE0) $(BIN)
 	cp -f $(EXE1) $(BIN)
 	cp -f $(EXE2) $(BIN)

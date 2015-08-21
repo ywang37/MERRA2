@@ -60,6 +60,16 @@ yantosca\@seas.harvard.edu
 ==> netCDF compression level
 5
 
+==> SLURM parameters
+#SBATCH -n 4
+export OMP_NUM_THREADS=4
+#SBATCH -t 0-00:05
+#SBATCH --mem-per-cpu=2500
+#SBATCH -qos=debug
+#SBATCH --mail-user=yantosca@seas.harvard.edu
+#SBATCH -o {LOGDIR}/SLURM.{DSTR}.stdout.log
+#SBATCH -e {LOGDIR}/SLURM.{DSTR}.stderr.log
+
 END OF FILE
 #EOP
 #------------------------------------------------------------------------------

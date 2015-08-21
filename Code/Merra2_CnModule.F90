@@ -438,6 +438,7 @@ CONTAINS
 !
 ! !REVISION HISTORY: 
 !  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
+!  13 Aug 2015 - R. Yantosca - Bug fix: now use 2015/01/01 for CN date
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -491,7 +492,7 @@ CONTAINS
     IF ( do2x25 ) THEN
        fName = TRIM( tempDirTmpl2x25 ) // TRIM( dataTmpl2x25 )
        gName = '2 x 2.5 global'
-       CALL ExpandDate  ( fName,     20110101,     000000      )      
+       CALL ExpandDate  ( fName,     20150101,     000000      )      
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.           )
        CALL NcOutFileDef( I2x25,     J2x25,        1,           &
@@ -503,7 +504,7 @@ CONTAINS
     IF ( do4x5 ) THEN
        fName = TRIM( tempDirTmpl4x5 ) // TRIM( dataTmpl4x5 )
        gName = '4 x 5 global'
-       CALL ExpandDate  ( fName,     20110101,  000000         )      
+       CALL ExpandDate  ( fName,     20150101,  000000         )      
        CALL StrRepl     ( fName,     '%%%%%%',  'CN    '       )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
        CALL NcOutFileDef( I4x5,      J4x5,      1,              &
@@ -515,7 +516,7 @@ CONTAINS
     IF ( doNestCh05 ) THEN
        fName = TRIM( tempDirTmplNestCh05 ) // TRIM( dataTmplNestCh05 )
        gName = 'nested CH 05'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       CALL ExpandDate  ( fName,     20150101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
        CALL NcOutFileDef( I_NestCh05,  J_NestCh05,     1,           &
@@ -529,7 +530,7 @@ CONTAINS
     IF ( doNestEu05 ) THEN
        fName = TRIM( tempDirTmplNestEu05 ) // TRIM( dataTmplNestEu05 )
        gName = 'nested EU 05'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       CALL ExpandDate  ( fName,     20150101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
        CALL NcOutFileDef( I_NestEu05,  J_NestEu05,     1,       &
@@ -543,7 +544,7 @@ CONTAINS
     IF ( doNestNa05 ) THEN
        fName = TRIM( tempDirTmplNestNa05 ) // TRIM( dataTmplNestNa05 )
        gName = 'nested NA 05'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       CALL ExpandDate  ( fName,     20150101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
        CALL NcOutFileDef( I_NestNa05,  J_NestNa05,  1,              &
@@ -557,7 +558,7 @@ CONTAINS
     IF ( doNestSe05 ) THEN
        fName = TRIM( tempDirTmplNestSe05 ) // TRIM( dataTmplNestSe05 )
        gName = 'nested SE 05'
-       CALL ExpandDate  ( fName,     20110101,     000000      )
+       CALL ExpandDate  ( fName,     20150101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
        CALL NcOutFileDef( I_NestSe05,  J_NestSe05,  1,              &

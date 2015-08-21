@@ -110,13 +110,13 @@ MERRA2.YYYYMMDD.%%%%%%.05x0625.SE.nc4
 T
 MERRA2.YYYYMMDD.%%%%%%.2x25.nc4
 /as/scratch/bmy/MERRA2/processed/
-/mnt/gcgrid-rw/data/ExtData/GEOS_4x5/MERRA2/YYYY/MM/
+/mnt/gcgrid-rw/data/ExtData/GEOS_2x2.5/MERRA2/YYYY/MM/
 
 ==> 4 x 5 output 
 T
 MERRA2.YYYYMMDD.%%%%%%.4x5.nc4
 /as/scratch/bmy/MERRA2/processed/
-/mnt/gcgrid-rw/data/ExtData/GEOS_2x2.5/MERRA2/YYYY/MM/
+/mnt/gcgrid-rw/data/ExtData/GEOS_4x5/MERRA2/YYYY/MM/
 
 ==> Mapping Weight Files
 weights_05x0625_to_2x25.txt

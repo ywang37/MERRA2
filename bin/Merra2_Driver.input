@@ -83,7 +83,7 @@ F
 MERRA2.YYYYMMDD.%%%%%%.05x0625.CH.nc4
 /as/scratch/bmy/MERRA2/processed/
 /as/scratch/bmy/MERRA2/processed/
-  401  211  513 291   # China grid
+  401  159  529 291
 
 ==> Nested 0625 EU output
 F
@@ -97,7 +97,7 @@ F
 MERRA2.YYYYMMDD.%%%%%%.05x0625.NA.nc4
 /as/scratch/bmy/MERRA2/processed/
 /as/scratch/bmy/MERRA2/processed/
-  81 201 193 301
+  65 201 225 321
 
 ==> Nested 0625 SE output
 F

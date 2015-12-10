@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !INCLUDE: doGeosFp.input  
+# !INCLUDE: doMerra2.input  
 #
 # !DESCRIPTION: Input file specifies the various default settings for
 # directories etc. for the doMerra2Multi script.
@@ -16,7 +16,7 @@
 # Job Directory          : Dir where job scripts are found
 # Log Directory          : Dir where output logs will be sent
 # Temporary Directory    : Dir for temporary files (can be same as Job Dir)
-# Program Executable     : Name of executable file (should be "Geos5Driver")
+# Program Executable     : Name of executable file (should be "Merra2_Driver")
 # Submit Statement       : {JOB} will be replaced w/ the actual job script name
 #
 # !REMARKS:

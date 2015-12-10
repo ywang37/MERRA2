@@ -8,7 +8,7 @@
 # !MODULE: cleanLogs
 #
 # !DESCRIPTION: This Perl script removes all individual log files from
-#  GEOS-FP data processing jobs from the log directory.
+#  MERRA2 data processing jobs from the log directory.
 #\\
 #\\
 # !USES:

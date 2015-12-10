@@ -6,7 +6,7 @@
 #
 # !MODULE: Makefile (in Code subdirectory)
 #
-# !DESCRIPTION: Makefile for the GEOS-FP data processing code.
+# !DESCRIPTION: Makefile for the MERRA2 data processing code.
 #\\
 #\\
 # !REMARKS:

@@ -8,7 +8,7 @@
 # !MODULE: cleanJobs
 #
 # !DESCRIPTION: This Perl script removes all individual job scripts
-#  from GEOS-FP data processing jobs from the job directory.
+#  from MERRA2 data processing jobs from the job directory.
 #\\
 #\\
 # !USES:

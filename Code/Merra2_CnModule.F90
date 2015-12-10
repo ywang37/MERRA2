@@ -6,7 +6,7 @@
 ! !MODULE: Merra2_CnModule
 !
 ! !DESCRIPTION: Module Merra2_CnModule contains routines to create the 
-!  GEOS-Chem constant data files from the GEOS-FP raw data.
+!  GEOS-Chem constant data files from the MERRA2 raw data.
 !\\
 !\\
 ! !INTERFACE: 
@@ -15,7 +15,7 @@ MODULE Merra2_CnModule
 ! 
 ! !USES:
 !
-  ! GEOS-FP data modules
+  ! MERRA2 data modules
   USE CharpakModule
   USE Merra2_InputsModule
   USE Merra2_RegridModule

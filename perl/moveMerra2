@@ -7,7 +7,7 @@
 #
 # !MODULE: moveMerra2
 #
-# !DESCRIPTION: This Perl script is used to move GEOS-FP files for
+# !DESCRIPTION: This Perl script is used to move MERRA2 files for
 #  from the scratch directory space to the GEOS-Chem data directory space.
 #\\
 #\\
@@ -149,7 +149,7 @@ sub getDefaults($$) {
 # !IROUTINE: getDirectories
 #
 # !DESCRIPTION:  Routine getDirectories reads the file and directory paths
-#  from the input file for the GEOS-FP Fortran executable.
+#  from the input file for the MERRA2 Fortran executable.
 #\\
 #\\
 # !INTERFACE:
@@ -368,7 +368,7 @@ sub checkDir($) {
 #
 # !IROUTINE: moveFiles
 #
-# !DESCRIPTION: Subroutine moveFiles moves the processed GEOS-FP met field 
+# !DESCRIPTION: Subroutine moveFiles moves the processed MERRA2 met field 
 #  files from the temporary directory to the data directory.
 #\\
 #\\

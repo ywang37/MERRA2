@@ -6,7 +6,7 @@
 ! !MODULE: Merra2_UtilityModule
 !
 ! !DESCRIPTION: Module Merra2_UtilModule contains several utility routines
-!  for the GEOS-FP regridding package.
+!  for the MERRA2 regridding package.
 !\\
 !\\
 ! !INTERFACE: 
@@ -44,7 +44,7 @@ MODULE Merra2_UtilityModule
 ! !IROUTINE: GetNFields
 !
 ! !DESCRIPTION: Returns the list of fields and number of fields to regrid
-!  for each GEOS-FP raw data file.
+!  for each MERRA2 raw data file.
 !\\
 !\\
 ! !INTERFACE:
@@ -94,7 +94,7 @@ MODULE Merra2_UtilityModule
 !
 ! !DESCRIPTION: 
 !  Returns the file name part of a full directory path.  Akin to the GNU
-!  Make "notdir" function.For each GEOS-FP raw data file 
+!  Make "notdir" function.For each MERRA2 raw data file 
 !\\
 !\\
 ! !INTERFACE:

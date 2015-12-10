@@ -6,7 +6,7 @@
 # !MODULE: Makefile (in doc subdirectory)
 #
 # !DESCRIPTION: Makefile for building the documentation (in PDF and 
-#  PostScript formats) for the GEOS-5.7.x data processing code, Makefiles,
+#  PostScript formats) for the MERRA2 data processing code, Makefiles,
 #  and Perl scripts.
 #\\
 #\\
@@ -159,15 +159,15 @@ makedoc:
 # Source files 
 SRC3 =                    \
 ./perl.intro              \
-$(PERLDIR)/doGeosFp       \
-$(PERLDIR)/doGeosFp.input \
-$(PERLDIR)/getGeosFp      \
-$(PERLDIR)/checkGeosFp    \
-$(PERLDIR)/sleepGeosFp    \
-$(PERLDIR)/schedGeosFp    \
+$(PERLDIR)/doMerra2       \
+$(PERLDIR)/doMerra2.input \
+$(PERLDIR)/getMerra2      \
+$(PERLDIR)/checkMerra2    \
+$(PERLDIR)/sleepMerra2    \
+$(PERLDIR)/schedMerra2    \
 $(PERLDIR)/cleanJobs      \
 $(PERLDIR)/cleanLogs      \
-$(PERLDIR)/delGeosFp      \
+$(PERLDIR)/delMerra2      \
 $(PERLDIR)/Dates.pm
 
 # LaTeX etc. files

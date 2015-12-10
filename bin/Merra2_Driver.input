@@ -6,7 +6,7 @@
 # !INCLUDE: Merra2Driver.input
 #
 # !DESCRIPTION: Specifies the input directory and the locations of the 
-# GEOS-FP netCDF data files that are required to produce the GEOS-Chem 
+# MERRA2 netCDF data files that are required to produce the GEOS-Chem 
 # "A1", "A3", and "I3" files.
 #\\
 #\\

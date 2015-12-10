@@ -5,10 +5,10 @@
 #------------------------------------------------------------------------------
 #BOP
 #
-# !MODULE: getGeosFp
+# !MODULE: getMerra2
 #
-# !DESCRIPTION: Perl script getGeosFP downloads 1 day of GEOS-FP raw met
-#  data (0.25 x 0.3125 degree horizontal resolution).  We download the data
+# !DESCRIPTION: Perl script getMerra2 downloads 1 day of MERRA2 raw met
+#  data (0.5 x 0.625 degree horizontal resolution).  We download the data
 #  directly from the GMAO FTP site with the Unix Wget command.
 #\\
 #\\
@@ -27,7 +27,7 @@ use Dates qw( &addDate
 # Met field directory
 our $MET_DIR     = "";
 
-# GEOS-FP file collection names
+# MERRA2 file collection names
 our @COLLECTIONS = ( "tavg1_2d_flx_Nx", "tavg1_2d_lnd_Nx", 
 		     "tavg1_2d_rad_Nx", "tavg1_2d_slv_Nx", 
 		     "inst3_3d_asm_Nv", "tavg3_3d_asm_Nv",
@@ -61,8 +61,8 @@ our $LISTING     = "";
 #  &getData(@)
 #
 # !CALLING SEQUENCE:
-#  getGeos57 20110101             # Gets data for 20110101
-#  getGeos57 20110101 1           # Dryrun: shows wget commands only
+#  getMerra2 20110101             # Gets data for 20110101
+#  getMerra2 20110101 1           # Dryrun: shows wget commands only
 #
 # !REVISION HISTORY: 
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/getGeos5
@@ -71,6 +71,7 @@ our $LISTING     = "";
 #  07 Aug 2013 - R. Yantosca - Now check if all files are downloaded
 #  18 Oct 2013 - R. Yantosca - Don't use the tavg3_3d_rad_Nv collection
 #  05 Dec 2013 - R. Yantosca - Restore the tavg3_3d_rad_Nv collection
+#  10 Dec 2015 - M. Sulprizio- Modified for MERRA2: Rename to getMerra2
 #------------------------------------------------------------------------------
 #EOP
 #------------------------------------------------------------------------------
@@ -81,7 +82,7 @@ our $LISTING     = "";
 # !IROUTINE: getDefaults
 #
 # !DESCRIPTION: Routine getDefaults reads an input file and returns the
-#  name of the directory where GEOS-5 "raw" met data files are found.
+#  name of the directory where MERRA2 "raw" met data files are found.
 #\\
 #\\
 # !INTERFACE:
@@ -101,6 +102,7 @@ sub getDefaults($) {
 #  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP met data
 #  06 Aug 2013 - R. Yantosca - Now read sleep time between tries [s]
 #  06 Aug 2013 - R. Yantosca - Now save name of file listing @ GMAO FTP
+#  10 Dec 2015 - M. Sulprizio- Modified for MERRA2 met data    
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -165,6 +167,7 @@ sub getFileList() {
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/checkGeos5
 #  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP met data
 #  07 Aug 2013 - R. Yantosca - Now reload file listing if it can't be found
+#  10 Dec 2015 - M. Sulprizio- Modified for MERRA2 met data    
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -306,7 +309,7 @@ sub checkData($) {
 #
 # !IROUTINE: getData
 #
-# !DESCRIPTION: Routine getData downloads 1-day of GEOS-FP data via the
+# !DESCRIPTION: Routine getData downloads 1-day of MERRA2 data via the
 #  Unix wget command.
 #\\
 #\\
@@ -320,7 +323,7 @@ sub getData(@) {
   my ( @fileList ) = @_;
 #
 # !CALLING SEQUENCE:
-#  &getGeos57Data( 20080101 20080108 );   
+#  &getMerra2Data( 20080101 20080108 );   
 #
 # !REVISION HISTORY:
 #  24 Oct 2011 - R. Yantosca - Initial version, based on GEOS_5/perl/getGeos5
@@ -329,6 +332,7 @@ sub getData(@) {
 #  12 Jan 2012 - R. Yantosca - Comment out sections that download the
 #                              tavg3_3d_odt_Nv and tavg3_3d_qdt_Nv files
 #  05 Aug 2013 - R. Yantosca - Modified for GEOS-FP (w/ Sajeev Philip)
+#  10 Dec 2015 - M. Sulprizio- Modified for MERRA2 met data    
 #EOP
 #------------------------------------------------------------------------------
 #BOC
@@ -366,7 +370,7 @@ sub getData(@) {
     } else { 
 
       #----------------------------------------------------------------------
-      # Otherwise, download the GEOS-FP data
+      # Otherwise, download the MERRA2 data
       #----------------------------------------------------------------------
 
       # Keep trying to download the file until we
@@ -383,14 +387,14 @@ sub getData(@) {
 
   # Print the overall status code to stdout & log before exiting
   $msg = &getLocalTime();
-  print "\ngetGeosFp: Overall status code: $status\n\nExiting at $msg\n";
+  print "\ngetMerra2: Overall status code: $status\n\nExiting at $msg\n";
 
   # Doublecheck that all files are present again 
   $status = 0;
   foreach $file ( @fileList ) { 
     if ( &checkData( $file ) == 0 ) { $status++; }
   } 
-  print "getGeosFp: Number of files successfully downloaded: $status\n";
+  print "getMerra2: Number of files successfully downloaded: $status\n";
 
   # Return status
   if ( $status == $N_FILES ) { return(  0 ); }
@@ -404,7 +408,7 @@ sub getData(@) {
 #
 # !IROUTINE: main
 #
-# !DESCRIPTION: Main is the driver program for the getGeosFp script.
+# !DESCRIPTION: Main is the driver program for the getMerra2 script.
 #\\
 #\\
 # !INTERFACE:
@@ -426,7 +430,7 @@ sub main() {
 # !LOCAL VARIABLES!
 #
   # Scalars
-  my $errMsg    = "Usage: getGeosFp YYYYMMDD [ {0|1} ] ]\n";
+  my $errMsg    = "Usage: getMerra2 YYYYMMDD [ {0|1} ] ]\n";
   my $printOnly = 0;
   my $status    = 0;
 
@@ -439,9 +443,9 @@ sub main() {
   else                           { print "$errMsg\n"; exit(1);               }
  
   # Get info from the defautls file, also set default date
-  &getDefaults( "doGeosFp.input" );
+  &getDefaults( "doMerra2.input" );
 
-  # We expect $N_FILES files for a normal day's worth of GEOS-FP met data
+  # We expect $N_FILES files for a normal day's worth of MERRA2 met data
   while ( scalar( @fileList = &getFileList() ) != $N_FILES ) { 
     sleep( $SLEEP_SEC );
   }

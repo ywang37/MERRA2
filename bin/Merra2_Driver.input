@@ -90,7 +90,7 @@ F
 MERRA2.YYYYMMDD.%%%%%%.05x0625.EU.nc4
 /as/scratch/bmy/MERRA2/processed/
 /as/scratch/bmy/MERRA2/processed/
-  265 246 353 303     
+  241 241 369 321
 
 ==> Nested 0625 NA output
 F
@@ -104,7 +104,7 @@ F
 MERRA2.YYYYMMDD.%%%%%%.05x0625.SE.nc4
 /as/scratch/bmy/MERRA2/processed/
 /as/scratch/bmy/MERRA2/processed/
-  409 161 497 241
+  409 201 497 241
   
 ==> Global 0.5 x 0.625 output
 F

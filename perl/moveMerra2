@@ -187,25 +187,25 @@ sub getDirectories($) {
   # Loop thru each line in the file
   for ( my $i = 0; $i < scalar( @file ); $i++ ) {
 
-    if ( $file[$i] =~ "==> Nested CH output" ) {
+    if ( $file[$i] =~ "==> Nested 0625 CH output" ) {
       $DO_NEST_CH        = $file[++$i];
       $DATA_FILE_NEST_CH = $file[++$i];
       $TEMP_DIR_NEST_CH  = $file[++$i];
       $DATA_DIR_NEST_CH  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested EU output" ) {
+    } elsif ( $file[$i] =~ "==> Nested 0625 EU output" ) {
       $DO_NEST_EU        = $file[++$i];
       $DATA_FILE_NEST_EU = $file[++$i];
       $TEMP_DIR_NEST_EU  = $file[++$i];
       $DATA_DIR_NEST_EU  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested NA output" ) {
+    } elsif ( $file[$i] =~ "==> Nested 0625 NA output" ) {
       $DO_NEST_NA        = $file[++$i];
       $DATA_FILE_NEST_NA = $file[++$i];
       $TEMP_DIR_NEST_NA  = $file[++$i];
       $DATA_DIR_NEST_NA  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested SE output" ) {
+    } elsif ( $file[$i] =~ "==> Nested 0625 SE output" ) {
       $DO_NEST_SE        = $file[++$i];
       $DATA_FILE_NEST_SE = $file[++$i];
       $TEMP_DIR_NEST_SE  = $file[++$i];
@@ -522,7 +522,7 @@ sub moveFiles(@) {
       $target = &replaceTokens( $target, $fileType );
 
       # Move command (list the directory first to force an automount)
-      $cmd  = "ls $dir > /dev/null; $ncCopy -d$comp $mask $target; rm -f $mask";
+      $cmd  = "ls $dir > /dev/null; nccopy -d$comp $mask $target; rm -f $mask";
     
       # Move the files
       print "$cmd\n";

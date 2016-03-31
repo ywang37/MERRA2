@@ -337,7 +337,7 @@ sub checkDir($) {
 
   # Stop with error if directory doesn't exist
   if ( !( -d $dir ) ) { 
-    print "doMerra2Multi: ERROR: Directory does not exist: $dir\n";
+    print "doMerra2: ERROR: Directory does not exist: $dir\n";
     exit(1)
   }
   
@@ -490,7 +490,7 @@ sub main() {
 
   # Error check arguments
   if ( scalar( @ARGV ) == 0 ) { 
-    print "Usage: doMerra2Multi YYYYMMDD\n"; 
+    print "Usage: doMerra2 YYYYMMDD\n"; 
     exit(1);
   }
 

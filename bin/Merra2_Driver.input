@@ -89,28 +89,28 @@ PS,PV,QV,T
 ==> Local Raw Data Path
 /as/scratch/bmy/MERRA2/raw/
 
-==> Nested AS output
+==> Nested 0.5 x 0.625 AS output
 T
 MERRA2.YYYYMMDD.%%%%%%.05x0625.AS.nc4
 /as/scratch/bmy/MERRA2/processed/
 /as/scratch/bmy/MERRA2/processed/
 385 159 529 291
 
-==> Nested EU output
+==> Nested 0.5 x 0.625 EU output
 T
 MERRA2.YYYYMMDD.%%%%%%.05x0625.EU.nc4
 /as/scratch/bmy/MERRA2/processed/
 /as/scratch/bmy/MERRA2/processed/
 241 241 369 321
 
-==> Nested NA output
+==> Nested 0.5 x 0.625 NA output
 T
 MERRA2.YYYYMMDD.%%%%%%.05x0625.NA.nc4
 /as/scratch/bmy/MERRA2/processed/
 /as/scratch/bmy/MERRA2/processed/
 65 201 225 321
 
-==> Nested SE output
+==> Nested 0.5 x 0.625 SE output
 F
 MERRA2.YYYYMMDD.%%%%%%.05x0625.SE.nc4
 /as/scratch/bmy/MERRA2/processed/

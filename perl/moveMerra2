@@ -188,25 +188,25 @@ sub getDirectories($) {
   # Loop thru each line in the file
   for ( my $i = 0; $i < scalar( @file ); $i++ ) {
 
-    if ( $file[$i] =~ "==> Nested AS output" ) {
+    if ( $file[$i] =~ "==> Nested 0.5 x 0.625 AS output" ) {
       $DO_NEST_AS        = $file[++$i];
       $DATA_FILE_NEST_AS = $file[++$i];
       $TEMP_DIR_NEST_AS  = $file[++$i];
       $DATA_DIR_NEST_AS  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested EU output" ) {
+    } elsif ( $file[$i] =~ "==> Nested 0.5 x 0.625 EU output" ) {
       $DO_NEST_EU        = $file[++$i];
       $DATA_FILE_NEST_EU = $file[++$i];
       $TEMP_DIR_NEST_EU  = $file[++$i];
       $DATA_DIR_NEST_EU  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested NA output" ) {
+    } elsif ( $file[$i] =~ "==> Nested 0.5 x 0.625 NA output" ) {
       $DO_NEST_NA        = $file[++$i];
       $DATA_FILE_NEST_NA = $file[++$i];
       $TEMP_DIR_NEST_NA  = $file[++$i];
       $DATA_DIR_NEST_NA  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested SE output" ) {
+    } elsif ( $file[$i] =~ "==> Nested 0.5 x 0.625 SE output" ) {
       $DO_NEST_SE        = $file[++$i];
       $DATA_FILE_NEST_SE = $file[++$i];
       $TEMP_DIR_NEST_SE  = $file[++$i];

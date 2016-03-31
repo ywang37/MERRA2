@@ -272,7 +272,7 @@ MODULE Merra2_InputsModule
           CASE( '==> Local Raw Data Path' )
              READ( IU_TXT, '(a)',    ERR=999 ) inputDataDir
 
-          CASE( '==> Nested 0625 AS output' )
+          CASE( '==> Nested 0.5 x 0.625 AS output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestAs05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestAs05
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestAs05
@@ -281,7 +281,7 @@ MODULE Merra2_InputsModule
              I_NestAs05 = I1_as05 - I0_as05 + 1
              J_NestAs05 = J1_as05 - J0_as05 + 1
 
-          CASE( '==> Nested 0625 EU output' )
+          CASE( '==> Nested 0.5 x 0.625 EU output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestEu05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestEu05
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestEu05
@@ -290,7 +290,7 @@ MODULE Merra2_InputsModule
              I_NestEu05 = I1_eu05 - I0_eu05 + 1
              J_NestEu05 = J1_eu05 - J0_eu05 + 1
 
-          CASE( '==> Nested 0625 NA output' )
+          CASE( '==> Nested 0.5 x 0.625 NA output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestNa05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestNa05
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestNa05
@@ -299,7 +299,7 @@ MODULE Merra2_InputsModule
              I_NestNa05 = I1_na05 - I0_na05 + 1
              J_NestNa05 = J1_na05 - J0_na05 + 1
 
-          CASE( '==> Nested 0625 SE output' )
+          CASE( '==> Nested 0.5 x 0.625 SE output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestSe05
              READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestSe05
              READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestSe05

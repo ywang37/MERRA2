@@ -39,10 +39,10 @@ our $USER_ID           = "";
 our $YEAR_STRING       = "";
 
 # Data file names and directories
-our $DO_NEST_CH        = "";
-our $DATA_FILE_NEST_CH = "";
-our $TEMP_DIR_NEST_CH  = "";
-our $DATA_DIR_NEST_CH  = "";
+our $DO_NEST_AS        = "";
+our $DATA_FILE_NEST_AS = "";
+our $TEMP_DIR_NEST_AS  = "";
+our $DATA_DIR_NEST_AS  = "";
 our $DO_NEST_EU        = "";
 our $DATA_FILE_NEST_EU = "";
 our $TEMP_DIR_NEST_EU  = "";
@@ -74,6 +74,7 @@ our $DATA_DIR_4x5      = "";
 # !REVISION HISTORY: 
 #  13 Aug 2015 - R. Yantosca - Initial version, based on GEOS-FP
 #  09 Sep 2015 - M. Sulprizio- Added global 0.5 x 0.625 grid
+#  30 Jan 2016 - J.-W. Xu    - Rename all CH domain to AS (Asia) domain
 #EOP
 #------------------------------------------------------------------------------
 #                  GEOS-Chem Global Chemical Transport Model                  !
@@ -187,25 +188,25 @@ sub getDirectories($) {
   # Loop thru each line in the file
   for ( my $i = 0; $i < scalar( @file ); $i++ ) {
 
-    if ( $file[$i] =~ "==> Nested 0625 CH output" ) {
-      $DO_NEST_CH        = $file[++$i];
-      $DATA_FILE_NEST_CH = $file[++$i];
-      $TEMP_DIR_NEST_CH  = $file[++$i];
-      $DATA_DIR_NEST_CH  = $file[++$i];
+    if ( $file[$i] =~ "==> Nested AS output" ) {
+      $DO_NEST_AS        = $file[++$i];
+      $DATA_FILE_NEST_AS = $file[++$i];
+      $TEMP_DIR_NEST_AS  = $file[++$i];
+      $DATA_DIR_NEST_AS  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested 0625 EU output" ) {
+    } elsif ( $file[$i] =~ "==> Nested EU output" ) {
       $DO_NEST_EU        = $file[++$i];
       $DATA_FILE_NEST_EU = $file[++$i];
       $TEMP_DIR_NEST_EU  = $file[++$i];
       $DATA_DIR_NEST_EU  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested 0625 NA output" ) {
+    } elsif ( $file[$i] =~ "==> Nested NA output" ) {
       $DO_NEST_NA        = $file[++$i];
       $DATA_FILE_NEST_NA = $file[++$i];
       $TEMP_DIR_NEST_NA  = $file[++$i];
       $DATA_DIR_NEST_NA  = $file[++$i];
 
-    } elsif ( $file[$i] =~ "==> Nested 0625 SE output" ) {
+    } elsif ( $file[$i] =~ "==> Nested SE output" ) {
       $DO_NEST_SE        = $file[++$i];
       $DATA_FILE_NEST_SE = $file[++$i];
       $TEMP_DIR_NEST_SE  = $file[++$i];
@@ -236,7 +237,7 @@ sub getDirectories($) {
   # data directory string.  This allows us to skip using the temporary 
   # directory.  You must edit bin/Merra2Driver.input accordingly.
   # is the same as the data directory string
-  if ( $TEMP_DIR_NEST_CH eq $DATA_DIR_NEST_CH ) { $DO_NEST_CH = "F"; }
+  if ( $TEMP_DIR_NEST_AS eq $DATA_DIR_NEST_AS ) { $DO_NEST_AS = "F"; }
   if ( $TEMP_DIR_NEST_EU eq $DATA_DIR_NEST_EU ) { $DO_NEST_EU = "F"; }
   if ( $TEMP_DIR_NEST_NA eq $DATA_DIR_NEST_NA ) { $DO_NEST_NA = "F"; }
   if ( $TEMP_DIR_NEST_SE eq $DATA_DIR_NEST_SE ) { $DO_NEST_SE = "F"; }
@@ -400,21 +401,21 @@ sub moveFiles(@) {
     $fileType = $_[$i];
 
     #-------------------------------
-    # Nested China grid 
+    # Nested Asia grid 
     #-------------------------------
-    if ( $DO_NEST_CH =~ "T" ) {
+    if ( $DO_NEST_AS =~ "T" ) {
 
       # Temporary file mask
-      $mask = "$TEMP_DIR_NEST_CH$DATA_FILE_NEST_CH";
+      $mask = "$TEMP_DIR_NEST_AS$DATA_FILE_NEST_AS";
       $mask = &replaceTokens( $mask, $fileType );
   
       # Data directory path
-      $dir = "$DATA_DIR_NEST_CH";
+      $dir = "$DATA_DIR_NEST_AS";
       $dir = &replaceTokens( $dir, $fileType );
       &checkDir( $dir );
       
       # New file name
-      $target = "$dir$DATA_FILE_NEST_CH";
+      $target = "$dir$DATA_FILE_NEST_AS";
       $target = &replaceTokens( $target, $fileType );
 
       # Move command (list the directory first to force an automount)

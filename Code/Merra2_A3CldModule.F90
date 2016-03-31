@@ -56,6 +56,7 @@ MODULE Merra2_A3CldModule
 !
 ! !REVISION HISTORY:
 !  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
+!  30 Jan 2016 - J.-W. Xu    - Rename all CH domain to AS (Asia) domain
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -228,12 +229,12 @@ MODULE Merra2_A3CldModule
 
     ! Pick DI and DJ attributes based on the grid
     SELECT CASE ( TRIM( gridName ) )
-       CASE( 'native', 'nested CH', 'nested EU', 'nested NA', 'nested SE' )
+       CASE( 'native', 'nested AS', 'nested EU', 'nested NA', 'nested SE' )
           DI = '0.3125'
           DJ = '0.25'
 !       CASE ( 'nested 0.5 x 0.625' )
 ! (lzh,06/21/2014)
-       CASE( 'nested CH 05', 'nested EU 05', 'nested NA 05', 'nested SE 05' )       
+       CASE( 'nested AS 05', 'nested EU 05', 'nested NA 05', 'nested SE 05' )
           DI = '0.625'
           DJ = '0.5'
        CASE( '0.5 x 0.625 global' )
@@ -538,18 +539,18 @@ MODULE Merra2_A3CldModule
     ! Open files for output; define variables, attribute, index arrays
     !=======================================================================
 
-    ! Open nested 0625 CH output file
-    IF ( doNestCh05 ) THEN
-       fName = TRIM( tempDirTmplNestCh05 ) // TRIM( dataTmplNestCh05 )
-       gName = 'nested CH 05'
+    ! Open nested 0625 AS output file
+    IF ( doNestAs05 ) THEN
+       fName = TRIM( tempDirTmplNestAs05 ) // TRIM( dataTmplNestAs05 )
+       gName = 'nested As 05'
        CALL ExpandDate  ( fName,     yyyymmdd,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'A3cld '    )
        CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
-       CALL NcOutFileDef( I_NestCh05,  J_NestCh05, L05x0625, TIMES_A3,  &
-                          xMid_05x0625(I0_ch05:I1_ch05),          &
-                          yMid_05x0625(J0_ch05:J1_ch05),          &
+       CALL NcOutFileDef( I_NestAs05,  J_NestAs05, L05x0625, TIMES_A3,  &
+                          xMid_05x0625(I0_as05:I1_as05),          &
+                          yMid_05x0625(J0_as05:J1_as05),          &
                           zMid_05x0625,                a3Mins,    &
-                          gName,    fName,        fOut05NestCh          )
+                          gName,    fName,        fOut05NestAs          )
     ENDIF
 
     ! Open nested EU output file
@@ -650,7 +651,7 @@ MODULE Merra2_A3CldModule
     IF ( do2x25     ) CALL NcCl( fOut2x25     )
     IF ( do4x5      ) CALL NcCl( fOut4x5      )
     IF ( doGlobal05 ) CALL NcCl( fOut05x0625  )
-    IF ( doNestCh05 ) CALL NcCl( fOut05NestCh )
+    IF ( doNestAs05 ) CALL NcCl( fOut05NestAs )
     IF ( doNestEu05 ) CALL NcCl( fOut05NestEu )
     IF ( doNestNa05 ) CALL NcCl( fOut05NestNa )
     IF ( doNestSe05 ) CALL NcCl( fOut05NestSe )
@@ -704,7 +705,7 @@ MODULE Merra2_A3CldModule
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,         Y,         Z,         T
-    INTEGER                 :: XNestCh05, YNestCh05, ZNestCh05, TNestCh05
+    INTEGER                 :: XNestAs05, YNestAs05, ZNestAs05, TNestAs05
     INTEGER                 :: XNestEu05, YNestEu05, ZNestEu05, TNestEu05
     INTEGER                 :: XNestNa05, YNestNa05, ZNestNa05, TNestNa05
     INTEGER                 :: XNestSe05, YNestSe05, ZNestSe05, TNestSe05
@@ -766,12 +767,12 @@ MODULE Merra2_A3CldModule
        CALL NcGet_DimLen( fOut05x0625,  'time', T05x0625  )
     ENDIF
 
-    ! Nested CH grid
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lev',  ZNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+    ! Nested AS grid
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lev',  ZNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested NA grid
@@ -929,12 +930,12 @@ MODULE Merra2_A3CldModule
              NULLIFY( Ptr )
           ENDIF
 
-          ! Nested China (point to proper slice of global data)
-          IF ( doNestCh05 ) THEN
-             Ptr  => Qflip( I0_ch05:I1_ch05, J0_ch05:J1_ch05, : )
+          ! Nested Asia (point to proper slice of global data)
+          IF ( doNestAs05 ) THEN
+             Ptr  => Qflip( I0_as05:I1_as05, J0_as05:J1_as05, : )
              st4d = (/ 1,         1,         1,         H /)
-             ct4d = (/ XNestCh05, YNestCh05, ZNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st4d, ct4d )
+             ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
+             CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st4d, ct4d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -1023,7 +1024,7 @@ MODULE Merra2_A3CldModule
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,         Y,         Z,         T
-    INTEGER                 :: XNestCh05, YNestCh05, ZNestCh05, TNestCh05
+    INTEGER                 :: XNestAs05, YNestAs05, ZNestAs05, TNestAs05
     INTEGER                 :: XNestEu05, YNestEu05, ZNestEu05, TNestEu05
     INTEGER                 :: XNestNa05, YNestNa05, ZNestNa05, TNestNa05
     INTEGER                 :: XNestSe05, YNestSe05, ZNestSe05, TNestSe05
@@ -1088,12 +1089,12 @@ MODULE Merra2_A3CldModule
        CALL NcGet_DimLen( fOut05x0625,  'time', T05x0625  )
     ENDIF
 
-    ! Nested CH grid
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lev',  ZNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+    ! Nested AS grid
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lev',  ZNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested NA grid
@@ -1288,29 +1289,29 @@ MODULE Merra2_A3CldModule
        ENDIF
 
        !----------------------------------------
-       ! NESTED CH GRID  (flip in vertical)
+       ! NESTED AS GRID  (flip in vertical)
        !----------------------------------------
-       IF ( doNestCh05 ) THEN
+       IF ( doNestAs05 ) THEN
 
           ! netCDF indices
           st4d = (/ 1,         1,         1,         H /)
-          ct4d = (/ XNestCh05, YNestCh05, ZNestCh05, 1 /)
+          ct4d = (/ XNestAs05, YNestAs05, ZNestAs05, 1 /)
 
           ! CLOUD
-          Ptr  => Cld( I0_ch05:I1_ch05, J0_ch05:J1_ch05, Z:1:-1 )
-          CALL NcWr( Ptr, fOut05NestCh, 'CLOUD',    st4d, ct4d )
+          Ptr  => Cld( I0_as05:I1_as05, J0_as05:J1_as05, Z:1:-1 )
+          CALL NcWr( Ptr, fOut05NestAs, 'CLOUD',    st4d, ct4d )
 
           ! TAUCLI 
-          Ptr  => TauI( I0_ch05:I1_ch05, J0_ch05:J1_ch05, Z:1:-1 )
-          CALL NcWr( Ptr, fOut05NestCh, 'TAUCLI',   st4d, ct4d )
+          Ptr  => TauI( I0_as05:I1_as05, J0_as05:J1_as05, Z:1:-1 )
+          CALL NcWr( Ptr, fOut05NestAs, 'TAUCLI',   st4d, ct4d )
 
           ! TAUCLW 
-          Ptr  => TauW( I0_ch05:I1_ch05, J0_ch05:J1_ch05, Z:1:-1 )
-          CALL NcWr( Ptr, fOut05NestCh, 'TAUCLW',   st4d, ct4d )
+          Ptr  => TauW( I0_as05:I1_as05, J0_as05:J1_as05, Z:1:-1 )
+          CALL NcWr( Ptr, fOut05NestAs, 'TAUCLW',   st4d, ct4d )
 
           ! OPTDEPTH
-          Ptr  => OptD( I0_ch05:I1_ch05, J0_ch05:J1_ch05, Z:1:-1 )
-          CALL NcWr( Ptr, fOut05NestCh, 'OPTDEPTH', st4d, ct4d )
+          Ptr  => OptD( I0_as05:I1_as05, J0_as05:J1_as05, Z:1:-1 )
+          CALL NcWr( Ptr, fOut05NestAs, 'OPTDEPTH', st4d, ct4d )
 
           ! Free pointer memory
           NULLIFY( Ptr )

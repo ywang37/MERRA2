@@ -86,7 +86,7 @@ MODULE Merra2_InputsModule
   LOGICAL                 :: VERBOSE                  ! Do debug printout?
   INTEGER                 :: yyyymmdd                 ! Today's date
   INTEGER                 :: fIn                      ! NC fId; input
-  INTEGER                 :: fOutNestCh               ! NC fId; output CH grid
+  INTEGER                 :: fOutNestAs               ! NC fId; output Asia grid
   INTEGER                 :: fOutNestEu               ! NC fId; output EU grid
   INTEGER                 :: fOutNestNa               ! NC fId; output NA grid
   INTEGER                 :: fOutNestSe               ! NC fId; output SE grid
@@ -108,6 +108,7 @@ MODULE Merra2_InputsModule
   CHARACTER(LEN=MAX_CHAR) :: dataTmpl4x5              ! 4x5     file template
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmpl4x5           ! 4x5     temporary dir
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmpl4x5           ! 4x5     data dir
+  CHARACTER(LEN=MAX_CHAR) :: ftp                      ! jxu, ftp line in Merra2_Driver.input. ftp is not really used in doMerra2, but is used to skip the ftp line when the code is looking for filename and variable name
   CHARACTER(LEN=MAX_CHAR) :: const_2d_asm_Nx_file     ! const_2d_chm_Nx file
   CHARACTER(LEN=MAX_CHAR) :: const_2d_asm_Nx_data     !  and list of data flds
   CHARACTER(LEN=MAX_CHAR) :: inst3_3d_asm_Nv_file     ! inst3_3d_asm_Nv file
@@ -147,10 +148,10 @@ MODULE Merra2_InputsModule
 
   ! Nested grids
   LOGICAL                 :: doGlobal05               ! Save global 0.5 x 0.625
-  LOGICAL                 :: doNestCh05               ! Save nested CH grid?
-  INTEGER                 :: I0_ch05,    J0_ch05      ! LL corner of CH grid
-  INTEGER                 :: I1_ch05,    J1_ch05      ! UR corner of CH grid
-  INTEGER                 :: I_NestCh05, J_NestCh05   ! NestCh dimensions   
+  LOGICAL                 :: doNestAs05               ! Save nested As grid?
+  INTEGER                 :: I0_as05,    J0_as05      ! LL corner of AS grid
+  INTEGER                 :: I1_as05,    J1_as05      ! UR corner of AS grid
+  INTEGER                 :: I_NestAs05, J_NestAs05   ! NestAs dimensions
   LOGICAL                 :: doNestEu05               ! Save nested EU grid?
   INTEGER                 :: I0_eu05,    J0_eu05      ! LL corner of EU grid
   INTEGER                 :: I1_eu05,    J1_eu05      ! UR corner of EU grid
@@ -164,14 +165,14 @@ MODULE Merra2_InputsModule
   INTEGER                 :: I1_se05,    J1_se05      ! UR corner of SE grid
   INTEGER                 :: I_NestSe05, J_NestSe05   ! NestSe dimensions   
   LOGICAL                 :: do05x0625                ! Save out 0.5 x 0.625
-  INTEGER                 :: fOut05NestCh             ! NC fId; output CH grid
+  INTEGER                 :: fOut05NestAs             ! NC fId; output AS grid
   INTEGER                 :: fOut05NestEu             ! NC fId; output EU grid
   INTEGER                 :: fOut05NestNa             ! NC fId; output NA grid
   INTEGER                 :: fOut05NestSe             ! NC fId; output SE grid
 
-  CHARACTER(LEN=MAX_CHAR) :: dataTmplNestCh05         ! NstCh file template
-  CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestCh05      ! NstCh temporary dir
-  CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestCh05      ! NstCh data dir
+  CHARACTER(LEN=MAX_CHAR) :: dataTmplNestAs05         ! NstAs file template
+  CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestAs05      ! NstAs temporary dir
+  CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestAs05      ! NstAs data dir
   CHARACTER(LEN=MAX_CHAR) :: dataTmplNestNa05         ! NstNa file template
   CHARACTER(LEN=MAX_CHAR) :: tempDirTmplNestNa05      ! NstNa temporary dir
   CHARACTER(LEN=MAX_CHAR) :: dataDirTmplNestNa05      ! NstNa data dir
@@ -194,6 +195,9 @@ MODULE Merra2_InputsModule
 !
 ! !REVISION HISTORY:
 !  28 Jul 2015 - R. Yantosca - Initial version, based on GEOS-FP
+!  30 Jan 2016 - J.-W. Xu    - Rename all CH domain to AS (Asia) domain
+!  31 Mar 2016 - M. Sulprizio- Add code to read line for collection ftp site
+!                              (updates from Junwei Xu)
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -268,14 +272,14 @@ MODULE Merra2_InputsModule
           CASE( '==> Local Raw Data Path' )
              READ( IU_TXT, '(a)',    ERR=999 ) inputDataDir
 
-          CASE( '==> Nested 0625 CH output' )
-             READ( IU_TXT,   *,      ERR=999 ) doNestCh05
-             READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestCh05
-             READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestCh05
-             READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmplNestCh05
-             READ( IU_TXT,   *,      ERR=999 ) I0_ch05, J0_ch05, I1_ch05, J1_ch05
-             I_NestCh05 = I1_ch05 - I0_ch05 + 1
-             J_NestCh05 = J1_ch05 - J0_ch05 + 1
+          CASE( '==> Nested 0625 AS output' )
+             READ( IU_TXT,   *,      ERR=999 ) doNestAs05
+             READ( IU_TXT, '(a)',    ERR=999 ) dataTmplNestAs05
+             READ( IU_TXT, '(a)',    ERR=999 ) tempDirTmplNestAs05
+             READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmplNestAs05
+             READ( IU_TXT,   *,      ERR=999 ) I0_as05, J0_as05, I1_as05, J1_as05
+             I_NestAs05 = I1_as05 - I0_as05 + 1
+             J_NestAs05 = J1_as05 - J0_as05 + 1
 
           CASE( '==> Nested 0625 EU output' )
              READ( IU_TXT,   *,      ERR=999 ) doNestEu05
@@ -324,48 +328,59 @@ MODULE Merra2_InputsModule
              READ( IU_TXT, '(a)',    ERR=999 ) dataDirTmpl4x5
 
           CASE( '==> const_2d_asm_Nx' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) const_2d_asm_Nx_file
              READ( IU_TXT, '(a)',    ERR=999 ) const_2d_asm_Nx_data
              READ( IU_TXT,   *,      ERR=999 ) doMakeCn
 
           CASE( '==> tavg1_2d_flx_Nx' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_flx_Nx_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_flx_Nx_data
 
           CASE( '==> tavg1_2d_lnd_Nx' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_lnd_Nx_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_lnd_Nx_data
 
           CASE( '==> tavg1_2d_rad_Nx' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_rad_Nx_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_rad_Nx_data
 
           CASE( '==> tavg1_2d_slv_Nx' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_slv_Nx_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg1_2d_slv_Nx_data
 
           CASE( '==> tavg3_3d_asm_Nv' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_asm_Nv_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_asm_Nv_data
 
           CASE( '==> tavg3_3d_cld_Nv' ) 
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_cld_Nv_file
              READ( IU_TXT, '(7x,a)', ERR=999 ) tavg3_3d_cld_Nv_data_c
              READ( IU_TXT, '(7x,a)', ERR=999 ) tavg3_3d_cld_Nv_data_d
              
           CASE( '==> tavg3_3d_mst_Ne' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_mst_Ne_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_mst_Ne_data
 
           CASE( '==> tavg3_3d_mst_Nv' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_mst_Nv_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_mst_Nv_data
 
           CASE( '==> tavg3_3d_rad_Nv' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_rad_Nv_file
              READ( IU_TXT, '(a)',    ERR=999 ) tavg3_3d_rad_Nv_data
 
           CASE( '==> inst3_3d_asm_Nv' )
+             READ( IU_TXT, '(a)',    ERR=999 ) ftp
              READ( IU_TXT, '(a)',    ERR=999 ) inst3_3d_asm_Nv_file
              READ( IU_TXT, '(a)',    ERR=999 ) inst3_3d_asm_Nv_data
 
@@ -392,7 +407,7 @@ MODULE Merra2_InputsModule
     CLOSE( IU_TXT )
 
     ! (lzh, 06/20/2014)
-    do05x0625 = ( doNestCh05 .or. doNestEu05 .or. doNestNa05 .or. doNestSe05 &
+    do05x0625 = ( doNestAs05 .or. doNestEu05 .or. doNestNa05 .or. doNestSe05 &
              .or. doGlobal05 )
     doNative  = do05x0625
 
@@ -479,9 +494,9 @@ MODULE Merra2_InputsModule
        PRINT*, 'a3MinsI          : ', a3MinsI
        PRINT*, 'a3Mins           : ', a3Mins
        PRINT*, 'doNative         : ', doNative
-       PRINT*, 'doNestCh05       : ', doNestCh05
-       PRINT*, ' I0, J0, I1, J1  : ', I0_ch05, J0_ch05, I1_ch05, J1_ch05
-       PRINT*, ' ICH, JCH        : ', I_NestCh05, J_NestCh05
+       PRINT*, 'doNestAs05       : ', doNestAs05
+       PRINT*, ' I0, J0, I1, J1  : ', I0_as05, J0_as05, I1_as05, J1_as05
+       PRINT*, ' IAS, JAS        : ', I_NestAs05, J_NestAs05
        PRINT*, 'doNestEu05       : ', doNestEu05
        PRINT*, ' I0, J0, I1, J1  : ', I0_eu05, J0_eu05, I1_eu05, J1_eu05
        PRINT*, ' INA, JNA        : ', I_NestEu05, J_NestEu05
@@ -496,9 +511,9 @@ MODULE Merra2_InputsModule
        PRINT*, 'do4x5            : ', do4x5
        PRINT*, 'doMakeCn         : ', doMakeCn
        PRINT*, 'inputDataDir     : ', TRIM( inputDataDir            )
-       PRINT*, 'dataTmplNestCh05 : ', TRIM( dataTmplNestCh05        )
-       PRINT*, 'tempDirNestCh05  : ', TRIM( tempDirTmplNestCh05     )
-       PRINT*, 'dataDirNestCh05  : ', TRIM( dataDirTmplNestCh05     )
+       PRINT*, 'dataTmplNestAs05 : ', TRIM( dataTmplNestAs05        )
+       PRINT*, 'tempDirNestAs05  : ', TRIM( tempDirTmplNestAs05     )
+       PRINT*, 'dataDirNestAs05  : ', TRIM( dataDirTmplNestAs05     )
        PRINT*, 'dataTmplNestEu05 : ', TRIM( dataTmplNestEu05        )
        PRINT*, 'tempDirNestEu05  : ', TRIM( tempDirTmplNestEu05     )
        PRINT*, 'dataDirNestEu05  : ', TRIM( dataDirTmplNestEu05     )

@@ -57,6 +57,7 @@ MODULE Merra2_CnModule
 !
 ! !REVISION HISTORY:
 !  28 Jul 2015 - R. Yantosca - Initial version, based on MERRA2
+!  30 Jan 2016 - J.-W. Xu    - Rename all CH domain to AS (Asia) domain
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -219,7 +220,7 @@ CONTAINS
 
     ! Pick DI and DJ attributes based on the grid
     SELECT CASE ( TRIM( gridName ) )
-       CASE( 'nested CH 05', 'nested EU 05', 'nested NA 05', 'nested SE 05' )
+       CASE( 'nested AS 05', 'nested EU 05', 'nested NA 05', 'nested SE 05' )
           DI = '0.625'
           DJ = '0.5'
        CASE( '0.5 x 0.625 global' )
@@ -529,18 +530,18 @@ CONTAINS
                           gName,        fName,           fOut05x0625 )
     ENDIF
 
-    ! Open nested CH output file
-    IF ( doNestCh05 ) THEN
-       fName = TRIM( tempDirTmplNestCh05 ) // TRIM( dataTmplNestCh05 )
-       gName = 'nested CH 05'
+    ! Open nested AS output file
+    IF ( doNestAs05 ) THEN
+       fName = TRIM( tempDirTmplNestAs05 ) // TRIM( dataTmplNestAs05 )
+       gName = 'nested AS 05'
        CALL ExpandDate  ( fName,     20150101,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'CN    '    )
        CALL StrCompress ( fName, RemoveAll=.TRUE.              )
-       CALL NcOutFileDef( I_NestCh05,  J_NestCh05,     1,           &
-                          xMid_05x0625(I0_ch05:I1_ch05),          &
-                          yMid_05x0625(J0_ch05:J1_ch05),          &
+       CALL NcOutFileDef( I_NestAs05,  J_NestAs05,     1,           &
+                          xMid_05x0625(I0_as05:I1_as05),          &
+                          yMid_05x0625(J0_as05:J1_as05),          &
                           time,      gName,        fName,       &
-                          fOut05NestCh                           )
+                          fOut05NestAs                           )
     ENDIF
 
     ! Open nested EU output file
@@ -604,7 +605,7 @@ CONTAINS
     IF ( do2x25     ) CALL NcCl( fOut2x25     )
     IF ( do4x5      ) CALL NcCl( fOut4x5      )
     IF ( doGlobal05 ) CALL NcCl( fOut05x0625  )
-    IF ( doNestCh05 ) CALL NcCl( fOut05NestCh )
+    IF ( doNestAs05 ) CALL NcCl( fOut05NestAs )
     IF ( doNestEu05 ) CALL NcCl( fOut05NestEu )
     IF ( doNestNa05 ) CALL NcCl( fOut05NestNa )
     IF ( doNestSe05 ) CALL NcCl( fOut05NestSe )
@@ -649,7 +650,7 @@ CONTAINS
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,         Y,          T
-    INTEGER                 :: XNestCh05, YNestCh05,  TNestCh05
+    INTEGER                 :: XNestAs05, YNestAs05,  TNestAs05
     INTEGER                 :: XNestEu05, YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05, YNestNa05,  TNestNa05
     INTEGER                 :: XNestSe05, YNestSe05,  TNestSe05
@@ -697,12 +698,12 @@ CONTAINS
        CALL NcGet_DimLen( fOut05x0625,  'lat',  Y05x0625  )
        CALL NcGet_DimLen( fOut05x0625,  'time', T05x0625  )
     ENDIF
-    
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+
+    ! Nested AS grid 0625
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested EU grid 0625
@@ -836,12 +837,12 @@ CONTAINS
           NULLIFY( QNest )
        ENDIF
 
-       ! Nested CH
-       IF ( doNestCh05 ) THEN
-          QNest => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05, 1 )
+       ! Nested AS
+       IF ( doNestAs05 ) THEN
+          QNest => Q( I0_as05:I1_as05, J0_as05:J1_as05, 1 )
           st3d  = (/ 1,         1,         1 /)
-          ct3d  = (/ XNestCh05, YNestCh05, 1 /)
-          CALL NcWr( QNest, fOut05NestCh, TRIM( name ), st3d, ct3d )
+          ct3d  = (/ XNestAs05, YNestAs05, 1 /)
+          CALL NcWr( QNest, fOut05NestAs, TRIM( name ), st3d, ct3d )
           NULLIFY( QNest )
        ENDIF
 

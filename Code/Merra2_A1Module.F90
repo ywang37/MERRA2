@@ -75,6 +75,7 @@ MODULE Merra2_A1Module
 !  15 Feb 2012 - R. Yantosca - Now save output to nested NA grid netCDF file
 !  19 Sep 2013 - R. Yantosca - Renamed to Merra2_A1Module; adjusted for COARDS
 !  08 Oct 2013 - R. Yantosca - Now save CH, EU, NA, SE nested grids in one pass
+!  30 Jan 2016 - J.-W. Xu    - Rename all CH domain to AS (Asia) domain
 !EOP
 !------------------------------------------------------------------------------
 !BOC
@@ -234,11 +235,11 @@ MODULE Merra2_A1Module
 
     ! Pick DI and DJ attributes based on the grid
     SELECT CASE ( TRIM( gridName ) )
-       CASE( 'native', 'nested CH', 'nested NA', 'nested EU', 'nested SE' )
+       CASE( 'native', 'nested AS', 'nested NA', 'nested EU', 'nested SE' )
           DI = '0.3125'
           DJ = '0.25'
       !CASE ( 'nested 0.5 x 0.625' ) (lzh,06/21/2014)
-       CASE( 'nested CH 05', 'nested EU 05', 'nested NA 05', 'nested SE 05' ) !(lzh,06/21/2014)
+       CASE( 'nested AS 05', 'nested EU 05', 'nested NA 05', 'nested SE 05' ) !(lzh,06/21/2014)
           DI = '0.625'
           DJ = '0.5'
        CASE( '0.5 x 0.625 global' )
@@ -1267,18 +1268,18 @@ MODULE Merra2_A1Module
     ! Open files for output; define variables, attribute, index arrays
     !=======================================================================
 
-    ! Open nested 0625 CH output file
-    IF ( doNestCh05 ) THEN
-       fName = TRIM( tempDirTmplNestCh05 ) // TRIM( dataTmplNestCh05 )
-       gName = 'nested CH 05'
+    ! Open nested 0625 AS output file
+    IF ( doNestAs05 ) THEN
+       fName = TRIM( tempDirTmplNestAs05 ) // TRIM( dataTmplNestAs05 )
+       gName = 'nested AS 05'
        CALL ExpandDate  ( fName,     yyyymmdd,     000000      )
        CALL StrRepl     ( fName,     '%%%%%%',     'A1    '    )
        CALL StrCompress ( fName,     RemoveAll=.TRUE.          )
-       CALL NcOutFileDef( I_NestCh05,  J_NestCh05,     TIMES_A1,  &
-                          xMid_05x0625(I0_ch05:I1_ch05),          &
-                          yMid_05x0625(J0_ch05:J1_ch05),          &
+       CALL NcOutFileDef( I_NestAs05,  J_NestAs05,     TIMES_A1,  &
+                          xMid_05x0625(I0_as05:I1_as05),          &
+                          yMid_05x0625(J0_as05:J1_as05),          &
                           a1Mins,    gName,        fName,         &
-                          fOut05NestCh                           )
+                          fOut05NestAs                           )
     ENDIF
 
     ! Open nested EU output file
@@ -1379,7 +1380,7 @@ MODULE Merra2_A1Module
     IF ( do2x25     ) CALL NcCl( fOut2x25     )
     IF ( do4x5      ) CALL NcCl( fOut4x5      )
     IF ( doGlobal05 ) CALL NcCl( fOut05x0625  )
-    IF ( doNestCh05 ) CALL NcCl( fOut05NestCh )
+    IF ( doNestAs05 ) CALL NcCl( fOut05NestAs )
     IF ( doNestEu05 ) CALL NcCl( fOut05NestEu )
     IF ( doNestNa05 ) CALL NcCl( fOut05NestNa )
     IF ( doNestSe05 ) CALL NcCl( fOut05NestSe )
@@ -1426,7 +1427,7 @@ MODULE Merra2_A1Module
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,          Y,          T
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
+    INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
     INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
@@ -1485,11 +1486,11 @@ MODULE Merra2_A1Module
        CALL NcGet_DimLen( fOut05x0625,  'time', T05x0625  )
     ENDIF
 
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+    ! Nested AS grid 0625
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested EU grid 0625
@@ -1685,26 +1686,26 @@ MODULE Merra2_A1Module
 
                 ENDIF
 
-                IF ( doNestCh05 ) THEN
+                IF ( doNestAs05 ) THEN
 
                    !----------------------------------------------------------
-                   ! NESTED CH GRID: land/water/ice flags
+                   ! NESTED AS GRID: land/water/ice flags
                    !----------------------------------------------------------
-                   Ptr  => lwi( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
+                   Ptr  => lwi( I0_as05:I1_as05, J0_as05:J1_as05 )
                    st3d = (/ 1,         1,         H /)
-                   ct3d = (/ XNestCh05, YNestCh05, 1 /)
-                   CALL NcWr( Ptr, fOut05NestCh, 'LWI', st3d, ct3d )
+                   ct3d = (/ XNestAs05, YNestAs05, 1 /)
+                   CALL NcWr( Ptr, fOut05NestAs, 'LWI', st3d, ct3d )
                    NULLIFY( Ptr )
 
                    !----------------------------------------------------------
-                   ! NESTED CH GRID: sea ice bins
+                   ! NESTED AS GRID: sea ice bins
                    !----------------------------------------------------------
                    DO S = 1, N_ICE
                       WRITE( name2, 200 ) S-1
-                      Ptr  => ice( I0_ch05:I1_ch05, J0_ch05:J1_ch05, S )
+                      Ptr  => ice( I0_as05:I1_as05, J0_as05:J1_as05, S )
                       st3d = (/ 1,         1,         H  /)
-                      ct3d = (/ XNestCh05, YNestCh05, 1  /)
-                      CALL NcWr( Ptr, fOut05NestCh, name2, st3d, ct3d )
+                      ct3d = (/ XNestAs05, YNestAs05, 1  /)
+                      CALL NcWr( Ptr, fOut05NestAs, name2, st3d, ct3d )
                       NULLIFY( Ptr )
                    ENDDO
 
@@ -1839,12 +1840,12 @@ MODULE Merra2_A1Module
              NULLIFY( Ptr )
           ENDIF
 
-          ! Nested CH (point to proper slice of global data)
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
+          ! Nested AS (point to proper slice of global data)
+          IF ( doNestAs05 ) THEN
+             Ptr  => Q( I0_as05:I1_as05, J0_as05:J1_as05 )
              st3d = (/ 1,         1,         H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
+             ct3d = (/ XNestAs05, YNestAs05, 1 /)
+             CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -1927,7 +1928,7 @@ MODULE Merra2_A1Module
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,          Y,          T
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
+    INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
     INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
@@ -1980,11 +1981,11 @@ MODULE Merra2_A1Module
     ENDIF
 
     ! (lzh, 06/21/2014) 0.5x0.625
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+    ! Nested AS grid 0625
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested EU grid 0625
@@ -2137,12 +2138,12 @@ MODULE Merra2_A1Module
              NULLIFY( Ptr )
           ENDIF
 
-          ! Nested CH (point to proper slice of global data)
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
+          ! Nested AS (point to proper slice of global data)
+          IF ( doNestAs05 ) THEN
+             Ptr  => Q( I0_as05:I1_as05, J0_as05:J1_as05 )
              st3d = (/ 1,         1,         H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
+             ct3d = (/ XNestAs05, YNestAs05, 1 /)
+             CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -2225,7 +2226,7 @@ MODULE Merra2_A1Module
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,          Y,          T
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
+    INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
     INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
@@ -2278,11 +2279,11 @@ MODULE Merra2_A1Module
        CALL NcGet_DimLen( fOut05x0625,  'time', T05x0625  )
     ENDIF
 
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+    ! Nested AS grid 0625
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested EU grid 0625
@@ -2428,12 +2429,12 @@ MODULE Merra2_A1Module
              NULLIFY( Ptr )
           ENDIF
 
-          ! Nested CH (point to proper slice of global data)
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
+          ! Nested AS (point to proper slice of global data)
+          IF ( doNestAs05 ) THEN
+             Ptr  => Q( I0_as05:I1_as05, J0_as05:J1_as05 )
              st3d = (/ 1,         1,         H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
+             ct3d = (/ XNestAs05, YNestAs05, 1 /)
+             CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -2516,7 +2517,7 @@ MODULE Merra2_A1Module
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,          Y,          T
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
+    INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
     INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
@@ -2571,11 +2572,11 @@ MODULE Merra2_A1Module
        CALL NcGet_DimLen( fOut05x0625,  'time', T05x0625  )
     ENDIF
 
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+    ! Nested AS grid 0625
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested EU grid 0625
@@ -2773,12 +2774,12 @@ MODULE Merra2_A1Module
              NULLIFY( Ptr )
           ENDIF
 
-          ! Nested CH (point to proper slice of global data)
-          IF ( doNestCh05 ) THEN
-             Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05 )
+          ! Nested AS (point to proper slice of global data)
+          IF ( doNestAs05 ) THEN
+             Ptr  => Q( I0_as05:I1_as05, J0_as05:J1_as05 )
              st3d = (/ 1,         1,         H /)
-             ct3d = (/ XNestCh05, YNestCh05, 1 /)
-             CALL NcWr( Ptr, fOut05NestCh, TRIM( name ), st3d, ct3d )
+             ct3d = (/ XNestAs05, YNestAs05, 1 /)
+             CALL NcWr( Ptr, fOut05NestAs, TRIM( name ), st3d, ct3d )
              NULLIFY( Ptr )
           ENDIF
 
@@ -2865,7 +2866,7 @@ MODULE Merra2_A1Module
 
     ! Variables for netCDF I/O
     INTEGER                 :: X,          Y,          T
-    INTEGER                 :: XNestCh05,  YNestCh05,  TNestCh05
+    INTEGER                 :: XNestAs05,  YNestAs05,  TNestAs05
     INTEGER                 :: XNestEu05,  YNestEu05,  TNestEu05
     INTEGER                 :: XNestNa05,  YNestNa05,  TNestNa05
     INTEGER                 :: XNestSe05,  YNestSe05,  TNestSe05
@@ -2916,11 +2917,11 @@ MODULE Merra2_A1Module
        CALL NcGet_DimLen( fOut05x0625,  'time', T05x0625  )
     ENDIF
 
-    ! Nested CH grid 0625
-    IF ( doNestCh05 ) THEN
-       CALL NcGet_DimLen( fOut05NestCh, 'lon',  XNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'lat',  YNestCh05 )
-       CALL NcGet_DimLen( fOut05NestCh, 'time', TNestCh05 )
+    ! Nested AS grid 0625
+    IF ( doNestAs05 ) THEN
+       CALL NcGet_DimLen( fOut05NestAs, 'lon',  XNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'lat',  YNestAs05 )
+       CALL NcGet_DimLen( fOut05NestAs, 'time', TNestAs05 )
     ENDIF
 
     ! Nested EU grid 0625
@@ -3057,12 +3058,12 @@ MODULE Merra2_A1Module
           NULLIFY( Ptr )
        ENDIF
 
-       ! Nested CH (point to proper slice of global data)
-       IF ( doNestCh05 ) THEN
-          Ptr  => Q( I0_ch05:I1_ch05, J0_ch05:J1_ch05, 1 )
+       ! Nested AS (point to proper slice of global data)
+       IF ( doNestAs05 ) THEN
+          Ptr  => Q( I0_as05:I1_as05, J0_as05:J1_as05, 1 )
           st3d = (/ 1,         1,         H /)
-          ct3d = (/ XNestCh05, YNestCh05, 1 /)
-          CALL NcWr( Ptr, fOut05NestCh, 'ALBEDO', st3d, ct3d )
+          ct3d = (/ XNestAs05, YNestAs05, 1 /)
+          CALL NcWr( Ptr, fOut05NestAs, 'ALBEDO', st3d, ct3d )
           NULLIFY( Ptr )
        ENDIF
 

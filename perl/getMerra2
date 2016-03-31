@@ -626,7 +626,7 @@ sub main() {
 ##############################################################################
 
   # Download data files
-  $status = &getMerra2Data();
+  $status = &getData();
 
   # Return exit status
   return( $status );

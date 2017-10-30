@@ -514,7 +514,7 @@ MODULE Merra2_A3MstEModule
        CALL NcOutFileDef( I05x0625,     J05x0625,                           &
                           L05x0625+1,   TIMES_A3,                           &
                           xMid_05x0625, nc_yMid_05x0625,                    &
-                          zMid_05x0625, a3Mins,                             &
+                          zEdge_05x0625, a3Mins,                             &
                           gName,        fName,           fOut05x0625 )
     ENDIF
 

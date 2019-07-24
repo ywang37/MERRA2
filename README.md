@@ -1,3 +1,5 @@
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/geoschem/MERRA2/blob/master/LICENSE.txt)
+
 MERRA-2
 =======
 
